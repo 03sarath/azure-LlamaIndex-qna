@@ -73,10 +73,10 @@ def initialize_index():
         print("LLMPredictor created successfully")
         
         print("Initializing embeddings...")
+        # Configure OpenAIEmbeddings for Azure
         embedding_llm = LangchainEmbedding(OpenAIEmbeddings(
-            deployment_id="text-embedding-ada-002",
-            openai_api_type="azure",
-            openai_api_version="2023-03-15-preview"
+            model="text-embedding-ada-002",
+            chunk_size=1
         ))
         print("Embeddings initialized successfully")
 

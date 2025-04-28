@@ -76,6 +76,7 @@ def initialize_index():
         # Configure OpenAIEmbeddings for Azure
         embedding_llm = LangchainEmbedding(OpenAIEmbeddings(
             model="text-embedding-ada-002",
+            deployment_id="text-embedding-ada-002",
             chunk_size=1
         ))
         print("Embeddings initialized successfully")

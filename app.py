@@ -39,14 +39,14 @@ if missing_vars:
     raise ValueError(f"Missing required environment variables: {', '.join(missing_vars)}")
 
 # Configure Azure OpenAI environment variables
-os.environ["OPENAI_API_TYPE"] = os.getenv('OPENAI_API_TYPE')
-os.environ["OPENAI_API_VERSION"] = os.getenv('OPENAI_API_VERSION')
+os.environ["OPENAI_API_TYPE"] = "azure"
+os.environ["OPENAI_API_VERSION"] = "2023-03-15-preview"
 os.environ["OPENAI_API_BASE"] = os.getenv('OPENAI_API_BASE')
 os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_API_KEY')
 
 # Configure OpenAI client
-openai.api_type = os.getenv('OPENAI_API_TYPE')
-openai.api_version = os.getenv('OPENAI_API_VERSION')
+openai.api_type = "azure"
+openai.api_version = "2023-03-15-preview"
 openai.api_base = os.getenv('OPENAI_API_BASE')
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
@@ -80,7 +80,7 @@ def initialize_index():
         logger.info(f"Initializing AzureChatOpenAI with deployment: {deployment_name}")
         
         llm = AzureChatOpenAI(
-            deployment_id=deployment_name,
+            deployment_name=deployment_name,
             temperature=0,
             openai_api_version="2023-03-15-preview"
         )
@@ -93,12 +93,8 @@ def initialize_index():
         
         # Initialize embeddings
         logger.info("Initializing embeddings...")
-        # Configure OpenAIEmbeddings for Azure - using simpler configuration from notebook
-        embedding_llm = LangchainEmbedding(OpenAIEmbeddings(
-            model="text-embedding-ada-002",
-            deployment_id="text-embedding-ada-002",
-            chunk_size=1
-        ))
+        # Configure OpenAIEmbeddings for Azure
+        embedding_llm = LangchainEmbedding(OpenAIEmbeddings())
         logger.info("Embeddings initialized successfully")
 
         # Load documents

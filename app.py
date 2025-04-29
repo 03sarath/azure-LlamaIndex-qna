@@ -1,25 +1,17 @@
 from flask import Flask, render_template, request, jsonify
 import os
-import sys
 import logging
 from dotenv import load_dotenv
+from llama_index import GPTSimpleVectorIndex, SimpleDirectoryReader, LLMPredictor, PromptHelper, LangchainEmbedding
+from langchain.chat_models import AzureChatOpenAI
+from langchain.embeddings import OpenAIEmbeddings
+import openai
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Try to import required packages with better error handling
-try:
-    from llama_index import GPTSimpleVectorIndex, SimpleDirectoryReader, LLMPredictor, PromptHelper, LangchainEmbedding
-    from langchain.chat_models import AzureChatOpenAI
-    from langchain.embeddings import OpenAIEmbeddings
-    import openai
-except ImportError as e:
-    logger.error(f"Error importing required packages: {e}")
-    logger.error("Please make sure all dependencies are installed by running:")
-    logger.error("pip install -r requirements.txt")
-    sys.exit(1)
-
+# Initialize Flask app
 app = Flask(__name__)
 
 # Load environment variables
@@ -81,13 +73,12 @@ def initialize_index():
             return None
         
         logger.info(f"Found data directory: {data_dir}")
-        logger.info("Contents of data directory:", os.listdir(data_dir))
+        logger.info(f"Contents of data directory: {os.listdir(data_dir)}")
 
-        # Initialize LLM and embeddings
+        # Initialize AzureChatOpenAI
         deployment_name = os.getenv('OPENAI_DEPLOYMENT_NAME')
-        logger.info(f"Initializing Azure OpenAI with deployment: {deployment_name}")
+        logger.info(f"Initializing AzureChatOpenAI with deployment: {deployment_name}")
         
-        # Use AzureChatOpenAI for chat-based models
         llm = AzureChatOpenAI(
             deployment_name=deployment_name,
             temperature=0,
@@ -95,21 +86,14 @@ def initialize_index():
         )
         logger.info("AzureChatOpenAI initialized successfully")
         
+        # Create LLMPredictor
         logger.info("Creating LLMPredictor...")
         llm_predictor = LLMPredictor(llm=llm)
         logger.info("LLMPredictor created successfully")
         
+        # Initialize embeddings
         logger.info("Initializing embeddings...")
-        # Configure OpenAIEmbeddings for Azure
-        embedding_llm = LangchainEmbedding(OpenAIEmbeddings(
-            model="text-embedding-ada-002",
-            deployment_id="text-embedding-ada-002",
-            openai_api_base=os.getenv('OPENAI_API_BASE'),
-            openai_api_key=os.getenv('OPENAI_API_KEY'),
-            openai_api_type="azure",
-            openai_api_version=os.getenv('OPENAI_API_VERSION'),
-            chunk_size=1
-        ))
+        embedding_llm = LangchainEmbedding(OpenAIEmbeddings())
         logger.info("Embeddings initialized successfully")
 
         # Load documents
@@ -126,14 +110,22 @@ def initialize_index():
         num_output = 256
         chunk_size_limit = 1000
         max_chunk_overlap = 20
-        prompt_helper = PromptHelper(max_input_size=max_input_size, num_output=num_output, 
-                                   max_chunk_overlap=max_chunk_overlap, chunk_size_limit=chunk_size_limit)
+        prompt_helper = PromptHelper(
+            max_input_size=max_input_size,
+            num_output=num_output,
+            max_chunk_overlap=max_chunk_overlap,
+            chunk_size_limit=chunk_size_limit
+        )
         logger.info("Prompt helper configured successfully")
 
         # Create index
         logger.info("Creating vector index...")
-        index = GPTSimpleVectorIndex(documents, llm_predictor=llm_predictor, 
-                                   embed_model=embedding_llm, prompt_helper=prompt_helper)
+        index = GPTSimpleVectorIndex(
+            documents,
+            llm_predictor=llm_predictor,
+            embed_model=embedding_llm,
+            prompt_helper=prompt_helper
+        )
         logger.info("Vector index created successfully")
         
         # Save the index to disk
@@ -174,7 +166,9 @@ def query():
         return jsonify({'error': 'No question provided'}), 400
     
     try:
+        logger.info(f"Processing question: {question}")
         response = index.query(question)
+        logger.info("Question processed successfully")
         return jsonify({'answer': str(response)})
     except Exception as e:
         error_details = {

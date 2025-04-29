@@ -94,7 +94,9 @@ def initialize_index():
         # Initialize embeddings
         logger.info("Initializing embeddings...")
         # Configure OpenAIEmbeddings for Azure
-        embedding_llm = LangchainEmbedding(OpenAIEmbeddings())
+        embedding_llm = LangchainEmbedding(OpenAIEmbeddings(
+            engine="text-embedding-ada-002"
+        ))
         logger.info("Embeddings initialized successfully")
 
         # Load documents

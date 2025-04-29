@@ -93,7 +93,15 @@ def initialize_index():
         
         # Initialize embeddings
         logger.info("Initializing embeddings...")
-        embedding_llm = LangchainEmbedding(OpenAIEmbeddings())
+        embedding_llm = LangchainEmbedding(OpenAIEmbeddings(
+            model="text-embedding-ada-002",
+            engine="text-embedding-ada-002",
+            openai_api_base=os.getenv('OPENAI_API_BASE'),
+            openai_api_key=os.getenv('OPENAI_API_KEY'),
+            openai_api_type="azure",
+            openai_api_version=os.getenv('OPENAI_API_VERSION'),
+            chunk_size=1
+        ))
         logger.info("Embeddings initialized successfully")
 
         # Load documents

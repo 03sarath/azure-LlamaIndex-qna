@@ -64,6 +64,9 @@ def initialize_index():
         llm = AzureChatOpenAI(
             deployment_id="gpt-35-turbo",
             temperature=0,
+            openai_api_base=os.getenv('OPENAI_API_BASE'),
+            openai_api_key=os.getenv("OPENAI_API_KEY"),
+            openai_api_type="azure",
             openai_api_version="2023-03-15-preview"
         )
         print("AzureChatOpenAI initialized successfully")
@@ -77,6 +80,10 @@ def initialize_index():
         embedding_llm = LangchainEmbedding(OpenAIEmbeddings(
             model="text-embedding-ada-002",
             deployment_id="text-embedding-ada-002",
+            openai_api_base=os.getenv('OPENAI_API_BASE'),
+            openai_api_key=os.getenv("OPENAI_API_KEY"),
+            openai_api_type="azure",
+            openai_api_version="2023-03-15-preview",
             chunk_size=1
         ))
         print("Embeddings initialized successfully")

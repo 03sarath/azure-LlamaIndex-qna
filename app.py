@@ -172,8 +172,20 @@ def query():
         response = index.query(question)
         return jsonify({'answer': str(response)})
     except Exception as e:
+        error_details = {
+            'error_message': str(e),
+            'error_type': type(e).__name__,
+            'error_args': e.args if hasattr(e, 'args') else None,
+            'error_dict': e.__dict__ if hasattr(e, '__dict__') else None
+        }
         logger.error(f"Error during query: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        logger.error(f"Error type: {type(e).__name__}")
+        logger.error(f"Error args: {e.args if hasattr(e, 'args') else None}")
+        logger.error(f"Error dict: {e.__dict__ if hasattr(e, '__dict__') else None}")
+        import traceback
+        logger.error("Full traceback:")
+        traceback.print_exc()
+        return jsonify({'error': 'An error occurred while processing your question', 'details': error_details}), 500
 
 if __name__ == '__main__':
     app.run(debug=True) 

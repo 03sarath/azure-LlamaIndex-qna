@@ -80,7 +80,7 @@ def initialize_index():
         logger.info(f"Initializing AzureChatOpenAI with deployment: {deployment_name}")
         
         llm = AzureChatOpenAI(
-            deployment_id=deployment_name,
+            engine=deployment_name,
             temperature=0,
             openai_api_version=os.getenv('OPENAI_API_VERSION'),
             openai_api_base=os.getenv('OPENAI_API_BASE'),
@@ -99,7 +99,7 @@ def initialize_index():
         # Configure OpenAIEmbeddings for Azure
         embedding_llm = LangchainEmbedding(OpenAIEmbeddings(
             model="text-embedding-ada-002",
-            deployment_id="text-embedding-ada-002",
+            engine="text-embedding-ada-002",
             openai_api_base=os.getenv('OPENAI_API_BASE'),
             openai_api_key=os.getenv('OPENAI_API_KEY'),
             openai_api_type="azure",

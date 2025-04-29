@@ -185,7 +185,7 @@ def query():
         import traceback
         logger.error("Full traceback:")
         traceback.print_exc()
-        return jsonify({'error': 'An error occurred while processing your question', 'details': error_details}), 500
+        return jsonify({'error': str(e), 'details': error_details}), 500
 
 if __name__ == '__main__':
     app.run(debug=True) 

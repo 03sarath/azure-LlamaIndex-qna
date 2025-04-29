@@ -93,14 +93,11 @@ def initialize_index():
         
         # Initialize embeddings
         logger.info("Initializing embeddings...")
-        # Configure OpenAIEmbeddings for Azure
+        # Configure OpenAIEmbeddings for Azure - using simpler configuration from notebook
         embedding_llm = LangchainEmbedding(OpenAIEmbeddings(
             model="text-embedding-ada-002",
             deployment_id="text-embedding-ada-002",
-            openai_api_base=os.getenv('OPENAI_API_BASE'),
-            openai_api_key=os.getenv('OPENAI_API_KEY'),
-            openai_api_type="azure",
-            openai_api_version="2023-03-15-preview"
+            chunk_size=1
         ))
         logger.info("Embeddings initialized successfully")
 

@@ -96,7 +96,7 @@ def initialize_index():
         # Configure OpenAIEmbeddings for Azure
         embedding_llm = LangchainEmbedding(OpenAIEmbeddings(
             model="text-embedding-ada-002",
-            deployment="text-embedding-ada-002",
+            engine="text-embedding-ada-002",
             openai_api_base=os.getenv('OPENAI_API_BASE'),
             openai_api_key=os.getenv('OPENAI_API_KEY'),
             openai_api_type="azure",

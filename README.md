@@ -1,56 +1,72 @@
-# Azure OpenAI Q&A System with LlamaIndex
+# Azure OpenAI QnA System
 
-This is a Flask-based web application that provides a user interface for querying documents using Azure OpenAI Service and LlamaIndex.
-
-## Features
-
-- Web interface for asking questions about your documents
-- Uses Azure OpenAI Service for embeddings and chat
-- Built with LlamaIndex for efficient document retrieval
-- Modern and responsive UI
+A Flask-based web application that uses Azure OpenAI Service and LlamaIndex to provide question-answering capabilities.
 
 ## Prerequisites
 
 - Python 3.8 or higher
 - Azure OpenAI Service account
-- Documents to be indexed (place them in the `data/qna/` directory)
+- `.env` file with the following variables:
+  ```
+  OPENAI_API_KEY=your_api_key
+  OPENAI_API_BASE=your_azure_openai_endpoint
+  ```
 
-## Setup
+## Installation
 
-1. Create a `.env` file in the root directory with the following content:
-```
-OPENAI_API_KEY=your_azure_openai_api_key
-OPENAI_API_BASE=your_azure_openai_endpoint
-```
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd <repository-directory>
+   ```
 
-2. Install the required dependencies:
-```bash
-pip install -r requirements.txt
-```
+2. Create and activate a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-3. Place your documents in the `data/qna/` directory. The application will index these documents.
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 ## Running the Application
 
-1. Start the Flask application:
-```bash
-python app.py
-```
+1. Make sure your `.env` file is properly configured with your Azure OpenAI credentials.
 
-2. Open your web browser and navigate to `http://localhost:5000`
+2. Start the Flask application:
+   ```bash
+   python app.py
+   ```
 
-3. Enter your question in the text area and click "Ask Question" to get answers from your documents.
+3. Open your web browser and navigate to:
+   ```
+   http://localhost:5000
+   ```
+
+## Features
+
+- Modern, responsive UI built with Bootstrap
+- Real-time question answering using Azure OpenAI Service
+- Error handling and loading states
+- Clean and intuitive user interface
 
 ## Project Structure
 
-- `app.py`: Main Flask application
-- `templates/index.html`: Web interface template
-- `data/qna/`: Directory containing documents to be indexed
-- `requirements.txt`: Python dependencies
-- `.env`: Environment variables (not tracked in git)
+```
+.
+├── app.py              # Main Flask application
+├── requirements.txt    # Python dependencies
+├── .env               # Environment variables (not in repo)
+├── static/
+│   ├── style.css      # Custom CSS styles
+│   └── script.js      # Frontend JavaScript
+├── templates/
+│   └── index.html     # Main HTML template
+└── index.json         # LlamaIndex data file
+```
 
-## Notes
+## License
 
-- The application uses Azure OpenAI Service for both embeddings and chat functionality
-- Documents are indexed when the application starts
-- The index is stored in memory and will need to be rebuilt if the application restarts 
+This project is licensed under the MIT License - see the LICENSE file for details. 

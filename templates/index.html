@@ -3,129 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azure OpenAI Q&A</title>
+    <title>Azure OpenAI QnA System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .chat-container {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-top: 20px;
-        }
-        .message {
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .user-message {
-            background-color: #e3f2fd;
-            margin-left: 20%;
-        }
-        .bot-message {
-            background-color: #f5f5f5;
-            margin-right: 20%;
-        }
-        #loading {
-            display: none;
-            text-align: center;
-            margin: 10px 0;
-        }
-        .error-message {
-            color: #dc3545;
-            margin-top: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <h1 class="text-center mb-4">Azure OpenAI Q&A</h1>
-        
-        <div class="chat-container">
-            <div id="chat-messages"></div>
-            
-            <div id="loading">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="text-center">Azure OpenAI QnA System</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label for="question" class="form-label">Ask your question:</label>
+                            <textarea class="form-control" id="question" rows="3" placeholder="Type your question here..."></textarea>
+                        </div>
+                        <button id="askButton" class="btn btn-primary w-100">Ask Question</button>
+                        
+                        <div id="loading" class="text-center mt-4 d-none">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Processing your question...</p>
+                        </div>
+                        
+                        <div id="answer" class="mt-4 d-none">
+                            <h4>Answer:</h4>
+                            <div class="card">
+                                <div class="card-body" id="answerContent">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="error" class="alert alert-danger mt-4 d-none" role="alert">
+                        </div>
+                    </div>
                 </div>
-                <p>Processing your question...</p>
             </div>
-            
-            <div class="error-message" id="error-message"></div>
-            
-            <form id="question-form" class="mt-3">
-                <div class="input-group">
-                    <input type="text" id="question-input" class="form-control" placeholder="Ask a question..." required>
-                    <button type="submit" class="btn btn-primary">Ask</button>
-                </div>
-            </form>
         </div>
     </div>
 
-    <script>
-        document.getElementById('question-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const questionInput = document.getElementById('question-input');
-            const question = questionInput.value.trim();
-            
-            if (!question) return;
-            
-            // Clear error message
-            document.getElementById('error-message').textContent = '';
-            
-            // Show loading indicator
-            document.getElementById('loading').style.display = 'block';
-            
-            // Add user message to chat
-            addMessage(question, 'user');
-            
-            try {
-                const response = await fetch('/query', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ question }),
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    addMessage(data.answer, 'bot');
-                } else {
-                    showError(data.error || 'An error occurred while processing your question');
-                }
-            } catch (error) {
-                showError('Failed to send question. Please try again.');
-            } finally {
-                // Hide loading indicator
-                document.getElementById('loading').style.display = 'none';
-                // Clear input
-                questionInput.value = '';
-            }
-        });
-        
-        function addMessage(text, sender) {
-            const chatMessages = document.getElementById('chat-messages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}-message`;
-            messageDiv.textContent = text;
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-        
-        function showError(message) {
-            document.getElementById('error-message').textContent = message;
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html> 

@@ -1,36 +1,33 @@
-# Azure OpenAI QnA System
+# Azure LlamaIndex Q&A System
 
-A Flask-based web application that uses Azure OpenAI Service and LlamaIndex to provide question-answering capabilities.
+This project demonstrates how to build a Question & Answer system using LlamaIndex (formerly GPT Index) with Azure OpenAI Service.
 
-## Prerequisites
+## 🚀 Quick Start
 
-- Python 3.8 or higher
-- Azure OpenAI Service account
-- `.env` file with the following variables:
-  ```
-  OPENAI_API_KEY=your_api_key
-  OPENAI_API_BASE=your_azure_openai_endpoint
-  ```
+### 1. Setup Environment
 
-## Installation
-
-1. Clone the repository:
+1. **Activate your virtual environment:**
    ```bash
-   git clone <repository-url>
-   cd <repository-directory>
+  python3.11 -m venv venv
+  source venv/bin/activate  # On Windows: venv\Scripts\activate
+  pip install -r requirements.txt
+
    ```
 
-2. Create and activate a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. Install dependencies:
+2. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-## License
+### 2. Configure Azure OpenAI
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+1. **Create a `.env` file** in the `qna-quickstart-with-gpt-index/` directory:
+   ```
+   AZURE_OPENAI_API_KEY=your_azure_openai_api_key_here
+   AZURE_OPENAI_ENDPOINT=https://your-resource-name.openai.azure.com/
+   ```
+
+2. **Update the model name** in the script to match your Azure deployment:
+   - Change `model="gpt-4o"` to your deployed model name (e.g., `"gpt-35-turbo"`, `"gpt-4"`, etc.)
+
+
